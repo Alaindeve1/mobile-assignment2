@@ -15,7 +15,7 @@
         android:padding="24dp"
         android:gravity="center_horizontal">
 
-        <!-- Instagram Logo -->
+        
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
             android:layout_marginBottom="16dp"
             android:fontFamily="serif" />
 
-        <!-- Sign up subtitle -->
+       
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp" />
 
-        <!-- Full Name Input -->
+        
         <EditText
             android:id="@+id/etFullName"
             android:layout_width="match_parent"
@@ -52,7 +52,7 @@
             android:textSize="14sp"
             android:textColorHint="#8E8E8E" />
 
-        <!-- Email Input -->
+        
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
@@ -65,7 +65,7 @@
             android:textSize="14sp"
             android:textColorHint="#8E8E8E" />
 
-        <!-- Password Input -->
+        
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
@@ -78,7 +78,7 @@
             android:textSize="14sp"
             android:textColorHint="#8E8E8E" />
 
-        <!-- Confirm Password Input -->
+        
         <EditText
             android:id="@+id/etConfirmPassword"
             android:layout_width="match_parent"
@@ -91,7 +91,7 @@
             android:textSize="14sp"
             android:textColorHint="#8E8E8E" />
 
-        <!-- Gender Selection -->
+        
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
 
         </RadioGroup>
 
-        <!-- Terms and Conditions Checkbox -->
+        
         <CheckBox
             android:id="@+id/cbTerms"
             android:layout_width="match_parent"
@@ -138,7 +138,7 @@
             android:layout_marginBottom="8dp"
             android:buttonTint="#1877F2" />
 
-        <!-- Newsletter Checkbox -->
+        
         <CheckBox
             android:id="@+id/cbNewsletter"
             android:layout_width="match_parent"
@@ -149,7 +149,7 @@
             android:layout_marginBottom="24dp"
             android:buttonTint="#1877F2" />
 
-        <!-- Sign Up Button -->
+        
         <Button
             android:id="@+id/btnSignUp"
             android:layout_width="match_parent"
@@ -162,7 +162,7 @@
             android:layout_marginBottom="32dp"
             android:elevation="2dp" />
 
-        <!-- Login Link -->
+       
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

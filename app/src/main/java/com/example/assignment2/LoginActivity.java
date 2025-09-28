@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class LoginActivity extends AppCompatActivity {
 
-    // Declare UI components
+    
     private EditText etUsername, etPassword;
     private Button btnLogin;
     private TextView tvSignUp, tvForgotPassword;
@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
         
-        // Handle system bars padding
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        // Find views by their IDs (you'll set these IDs in the XML layout)
+        
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Forgot password click listener (optional)
+        
         tvForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,13 +94,12 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Simple authentication (for demo purposes)
-        // In real app, you'd connect to a server/database
+       
         if (isValidCredentials(username, password)) {
             // Show success toast (Extra Credit requirement)
             Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
             
-            // Navigate to User Details (Login successful → User Details)
+           
             navigateToUserDetails(username);
         } else {
             // Show error toast
@@ -110,21 +109,21 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isValidCredentials(String username, String password) {
         // Simple demo validation - accept any non-empty credentials
-        // In real app, you'd check against database
+        
         return !username.isEmpty() && !password.isEmpty() && password.length() >= 3;
     }
 
     private void navigateToSignUp() {
-        // Create intent to navigate to SignUpActivity
+        // Created intent to navigate to SignUpActivity
         Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
         startActivity(intent);
         
-        // Optional: add animation
+        
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     private void navigateToUserDetails(String username) {
-        // Create intent to navigate to UserDetailsActivity
+        // Created intent to navigate to UserDetailsActivity
         Intent intent = new Intent(LoginActivity.this, UserDetailsActivity.class);
         
         // Pass username to UserDetails activity
@@ -133,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
         
         startActivity(intent);
         
-        // Optional: finish this activity so user can't go back with back button
+        // finish this activity so user can't go back with back button
         finish();
     }
 }

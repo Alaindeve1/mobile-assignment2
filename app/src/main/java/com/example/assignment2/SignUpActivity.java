@@ -19,7 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    // Declare UI components
+    
     private EditText etFullName, etEmail, etPassword, etConfirmPassword;
     private RadioGroup rgGender;
     private RadioButton rbMale, rbFemale;
@@ -33,14 +33,14 @@ public class SignUpActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_sign_up);
         
-        // Handle system bars padding
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Initialize UI components
+        
         initializeViews();
         
         // Set up click listeners
@@ -176,7 +176,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void navigateToLogin() {
         // Go back to login activity
-        finish(); // This closes current activity and goes back
+        finish(); 
     }
 
     private void navigateToUserDetails(String fullName, String email, String gender) {
@@ -192,7 +192,7 @@ public class SignUpActivity extends AppCompatActivity {
         
         startActivity(intent);
         
-        // Optional: finish this activity
+        
         finish();
     }
 }

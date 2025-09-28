@@ -26,20 +26,20 @@ public class UserDetailsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_user_details);
         
-        // Handle system bars padding
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Initialize UI components
+        
         initializeViews();
         
-        // Display user information
+      
         displayUserInfo();
         
-        // Set up click listeners
+        
         setupClickListeners();
     }
 
@@ -113,7 +113,7 @@ public class UserDetailsActivity extends AppCompatActivity {
             }
         });
 
-        // Edit Profile button click listener (demo functionality)
+        
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,13 +126,12 @@ public class UserDetailsActivity extends AppCompatActivity {
         // Show confirmation toast
         Toast.makeText(this, "Logging out...", Toast.LENGTH_SHORT).show();
         
-        // Clear any saved user data here (if you had any)
-        // For demo, we'll just navigate back to login
+        
         
         // Create intent to go back to LoginActivity
         Intent intent = new Intent(UserDetailsActivity.this, LoginActivity.class);
         
-        // Clear the activity stack so user can't go back
+       
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         
         startActivity(intent);
@@ -140,19 +139,16 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     private void handleEditProfile() {
-        // Demo functionality - in real app, you'd open an edit screen
+        /
         Toast.makeText(this, "Edit Profile feature coming soon!", Toast.LENGTH_SHORT).show();
         
-        // For demo, you could navigate back to SignUp to "edit" details
-        // Intent intent = new Intent(UserDetailsActivity.this, SignUpActivity.class);
-        // startActivity(intent);
+        
     }
 
     @Override
     public void onBackPressed() {
         // Override back button to show logout confirmation
         Toast.makeText(this, "Use logout button to exit", Toast.LENGTH_SHORT).show();
-        // Uncomment the line below if you want to allow back navigation
-        // super.onBackPressed();
+        
     }
 }
