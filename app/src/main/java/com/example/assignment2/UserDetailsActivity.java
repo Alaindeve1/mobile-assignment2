@@ -139,7 +139,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     private void handleEditProfile() {
-        /
+
         Toast.makeText(this, "Edit Profile feature coming soon!", Toast.LENGTH_SHORT).show();
         
         
