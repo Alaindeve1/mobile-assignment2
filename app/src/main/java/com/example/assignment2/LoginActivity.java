@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Student List click listener (NEW)
+        // Student List click listener
         tvStudentList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,10 +106,10 @@ public class LoginActivity extends AppCompatActivity {
         // Simple authentication
         if (isValidCredentials(username, password)) {
             // Show success toast
-            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Login successful! Welcome " + username, Toast.LENGTH_SHORT).show();
 
-            // Navigate to User Details
-            navigateToUserDetails(username);
+            // Navigate to Dashboard (UPDATED - now goes to Dashboard instead of UserDetails)
+            navigateToDashboard(username);
         } else {
             // Show error toast
             Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show();
@@ -130,21 +130,15 @@ public class LoginActivity extends AppCompatActivity {
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
-    private void navigateToUserDetails(String username) {
-        // Create intent to navigate to UserDetailsActivity
-        Intent intent = new Intent(LoginActivity.this, UserDetailsActivity.class);
-
-        // Pass username to UserDetails activity
+    // NEW: Navigate to Dashboard after successful login
+    private void navigateToDashboard(String username) {
+        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
         intent.putExtra("username", username);
-        intent.putExtra("source", "login");
-
         startActivity(intent);
-
-        // Optional: finish this activity so user can't go back with back button
-        finish();
+        finish(); // Close login activity
     }
 
-    // NEW: Navigate to Student List
+    // Navigate to Student List
     private void navigateToStudentList() {
         Toast.makeText(this, "Opening Student List...", Toast.LENGTH_SHORT).show();
 
