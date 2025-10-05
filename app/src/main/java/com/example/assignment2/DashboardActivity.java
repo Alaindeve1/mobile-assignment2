@@ -131,7 +131,7 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        // Logout Button
+
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,7 +166,7 @@ public class DashboardActivity extends AppCompatActivity {
     private void openAcademicCalendar() {
         Toast.makeText(this, "Opening AUCA Academic Calendar...", Toast.LENGTH_SHORT).show();
 
-        // Open AUCA website
+
         String url = "https://www.auca.ac.rw/academics/academic-calendar";
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 
