@@ -30,7 +30,7 @@ public class StudentListActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_student_list);
 
-        // Handle system bars padding
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -57,7 +57,7 @@ public class StudentListActivity extends AppCompatActivity {
     }
 
     private void loadStudentData() {
-        // Creating dummy student data for demonstration
+
         studentList.add(new Student("S001", "John Doe", "john.doe@auca.ac.rw", "+250788123456", "Male", "password123"));
         studentList.add(new Student("S002", "Jane Smith", "jane.smith@auca.ac.rw", "+250788234567", "Female", "password123"));
         studentList.add(new Student("S003", "Michael Brown", "michael.brown@auca.ac.rw", "+250788345678", "Male", "password123"));
