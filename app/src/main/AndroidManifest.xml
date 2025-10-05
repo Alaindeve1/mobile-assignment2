@@ -5,9 +5,6 @@
     <!-- Internet Permission for opening websites -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Optional: For direct phone calls (if you want to use ACTION_CALL instead of ACTION_DIAL) -->
-    <!-- <uses-permission android:name="android.permission.CALL_PHONE" /> -->
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -42,9 +39,15 @@
             android:exported="false"
             android:theme="@style/Theme.Assignment2" />
 
-        <!-- StudentListActivity (NEW) -->
+        <!-- StudentListActivity -->
         <activity
             android:name=".StudentListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Assignment2" />
+
+        <!-- DashboardActivity (NEW - Innovation Feature) -->
+        <activity
+            android:name=".DashboardActivity"
             android:exported="false"
             android:theme="@style/Theme.Assignment2" />
 
