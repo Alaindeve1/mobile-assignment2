@@ -222,7 +222,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Instagram Clone • Assignment #2"
+            android:text="Student Management System"
             android:textSize="12sp"
             android:textColor="#8E8E8E"
             android:gravity="center"
