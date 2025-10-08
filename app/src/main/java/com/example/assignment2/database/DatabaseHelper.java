@@ -57,4 +57,79 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return id;
     }
+    // Check if student exists
+    public boolean checkStudent(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {KEY_ID};
+        String selection = KEY_EMAIL + " = ? AND " + KEY_PASSWORD + " = ?";
+        String[] selectionArgs = {email, password};
+
+        Cursor cursor = db.query(
+                TABLE_STUDENTS,
+                columns,
+                selection,
+                selectionArgs,
+                null, null, null
+        );
+
+        int count = cursor.getCount();
+        cursor.close();
+        db.close();
+
+        return count > 0;
+    }
+
+    // Check if email exists
+    public boolean checkEmailExists(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {KEY_ID};
+        String selection = KEY_EMAIL + " = ?";
+        String[] selectionArgs = {email};
+
+        Cursor cursor = db.query(
+                TABLE_STUDENTS,
+                columns,
+                selection,
+                selectionArgs,
+                null, null, null
+        );
+
+        int count = cursor.getCount();
+        cursor.close();
+        db.close();
+
+        return count > 0;
+    }
+
+    // Get student by email
+    public Student getStudentByEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {KEY_ID, KEY_FULL_NAME, KEY_EMAIL, KEY_GENDER, KEY_NEWSLETTER};
+        String selection = KEY_EMAIL + " = ?";
+        String[] selectionArgs = {email};
+
+        Cursor cursor = db.query(
+                TABLE_STUDENTS,
+                columns,
+                selection,
+                selectionArgs,
+                null, null, null
+        );
+
+        Student student = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            student = new Student(
+                    cursor.getString(cursor.getColumnIndexOrThrow(KEY_FULL_NAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(KEY_EMAIL)),
+                    "", // Don't return password for security
+                    cursor.getString(cursor.getColumnIndexOrThrow(KEY_GENDER)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(KEY_NEWSLETTER)) == 1
+            );
+            student.setId(cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)));
+            cursor.close();
+        }
+        db.close();
+        return student;
+    }
+}
 
