@@ -3,7 +3,7 @@
 ## 📱 Project Overview
 A multi-activity Android application built for AUCA Mobile Programming course. The app demonstrates proper use of Activities, Intents (both Explicit and Implicit), ListViews, and data flow between components.
 
----
+--- 
 
 ## 🏗️ Activities Used
 
