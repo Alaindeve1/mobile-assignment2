@@ -19,3 +19,14 @@ public class Student implements Serializable {
     // Empty Constructor
     public Student() {
     }
+
+    // Constructor without database ID (for creating new students)
+    public Student(String studentId, String name, String email,
+                   String phone, String gender, String password) {
+        this.studentId = studentId;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.gender = gender;
+        this.password = password;
+    }
