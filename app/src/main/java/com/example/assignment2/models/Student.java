@@ -30,3 +30,15 @@ public class Student implements Serializable {
         this.gender = gender;
         this.password = password;
     }
+
+    // Constructor with database ID (for retrieving from database)
+    public Student(long id, String studentId, String name, String email,
+                   String phone, String gender, String password) {
+        this.id = id;
+        this.studentId = studentId;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.gender = gender;
+        this.password = password;
+    }
