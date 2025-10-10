@@ -41,4 +41,11 @@ public class Student implements Serializable {
         this.phone = phone;
         this.gender = gender;
         this.password = password;
-    }
+    } // Getters
+    public long getId() { return id; }
+    public String getStudentId() { return studentId; }
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public String getPhone() { return phone; }
+    public String getGender() { return gender; }
+    public String getPassword() { return password; }
