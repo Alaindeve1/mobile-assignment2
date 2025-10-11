@@ -28,4 +28,36 @@ public class Faculty implements Serializable {
         this.facultyName = facultyName;
         this.deanName = deanName;
         this.description = description;
+    } // Getters
+    public long getFacultyId() {
+        return facultyId;
+    }
+
+    public String getFacultyName() {
+        return facultyName;
+    }
+
+    public String getDeanName() {
+        return deanName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    // Setters
+    public void setFacultyId(long facultyId) {
+        this.facultyId = facultyId;
+    }
+
+    public void setFacultyName(String facultyName) {
+        this.facultyName = facultyName;
+    }
+
+    public void setDeanName(String deanName) {
+        this.deanName = deanName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
