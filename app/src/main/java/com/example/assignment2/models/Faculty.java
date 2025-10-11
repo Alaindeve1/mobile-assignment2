@@ -22,4 +22,10 @@ public class Faculty implements Serializable {
         this.facultyName = facultyName;
         this.deanName = deanName;
         this.description = description;
+    }  // Constructor with database ID (for retrieving from database)
+    public Faculty(long facultyId, String facultyName, String deanName, String description) {
+        this.facultyId = facultyId;
+        this.facultyName = facultyName;
+        this.deanName = deanName;
+        this.description = description;
     }
