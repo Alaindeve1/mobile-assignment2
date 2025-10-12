@@ -2,38 +2,33 @@ package com.example.assignment2.models;
 
 import java.io.Serializable;
 
-/**
- * Student Model Class
- * Represents a student entity with all properties
- */
 public class Student implements Serializable {
 
-    private long id;              // Database ID (auto-generated)
-    private String studentId;     // Student ID (S001, S002, etc.)
-    private String name;          // Full name
-    private String email;         // Email address
-    private String phone;         // Phone number
-    private String gender;        // Male/Female
-    private String password;      // Password
+    private long id;
+    private String studentId;
+    private String name;
+    private String email;
+    private String phone;
+    private String gender;
+    private String password;
+    private long facultyId; // NEW - Foreign Key
 
-    // Empty Constructor
     public Student() {
     }
 
-    // Constructor without database ID (for creating new students)
     public Student(String studentId, String name, String email,
-                   String phone, String gender, String password) {
+                   String phone, String gender, String password, long facultyId) {
         this.studentId = studentId;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.gender = gender;
         this.password = password;
+        this.facultyId = facultyId;
     }
 
-    // Constructor with database ID (for retrieving from database)
     public Student(long id, String studentId, String name, String email,
-                   String phone, String gender, String password) {
+                   String phone, String gender, String password, long facultyId) {
         this.id = id;
         this.studentId = studentId;
         this.name = name;
@@ -41,7 +36,9 @@ public class Student implements Serializable {
         this.phone = phone;
         this.gender = gender;
         this.password = password;
-    } // Getters
+        this.facultyId = facultyId;
+    }
+
     public long getId() { return id; }
     public String getStudentId() { return studentId; }
     public String getName() { return name; }
@@ -49,7 +46,8 @@ public class Student implements Serializable {
     public String getPhone() { return phone; }
     public String getGender() { return gender; }
     public String getPassword() { return password; }
-    // Setters
+    public long getFacultyId() { return facultyId; }
+
     public void setId(long id) { this.id = id; }
     public void setStudentId(String studentId) { this.studentId = studentId; }
     public void setName(String name) { this.name = name; }
@@ -57,6 +55,7 @@ public class Student implements Serializable {
     public void setPhone(String phone) { this.phone = phone; }
     public void setGender(String gender) { this.gender = gender; }
     public void setPassword(String password) { this.password = password; }
+    public void setFacultyId(long facultyId) { this.facultyId = facultyId; }
 
     @Override
     public String toString() {
@@ -64,7 +63,7 @@ public class Student implements Serializable {
                 "id=" + id +
                 ", studentId='" + studentId + '\'' +
                 ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
+                ", facultyId=" + facultyId +
                 '}';
     }
 }
