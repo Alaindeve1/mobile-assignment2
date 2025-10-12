@@ -78,3 +78,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     TABLE_FACULTIES + "(" + COL_FACULTY_ID + ")" +
                     ")";
 
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_TABLE_FACULTIES);
+        db.execSQL(CREATE_TABLE_STUDENTS);
+        db.execSQL(CREATE_TABLE_COURSES);
+        // NO DUMMY DATA - Users add their own through UI
+    }
