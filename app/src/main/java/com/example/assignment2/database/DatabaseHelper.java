@@ -260,5 +260,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return studentList;
     }
+    public List<Student> getStudentsByFaculty(long facultyId) {
+        List<Student> studentList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_STUDENTS, null, COL_STUDENT_FACULTY_ID + " = ?",
+                new String[]{String.valueOf(facultyId)}, null, null, COL_STUDENT_NAME);
+
+        if (cursor.moveToFirst()) {
+            do {
+                studentList.add(cursorToStudent(cursor));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return studentList;
+    }
 
 
