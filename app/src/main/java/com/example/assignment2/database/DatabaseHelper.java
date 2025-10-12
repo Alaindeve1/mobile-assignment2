@@ -226,4 +226,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(id)});
         db.close();
     }
+    // ==================== STUDENT CRUD ====================
+
+    public long addStudent(Student student) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_STUDENT_NUMBER, student.getStudentId());
+        values.put(COL_STUDENT_NAME, student.getName());
+        values.put(COL_STUDENT_EMAIL, student.getEmail());
+        values.put(COL_STUDENT_PHONE, student.getPhone());
+        values.put(COL_STUDENT_GENDER, student.getGender());
+        values.put(COL_STUDENT_PASSWORD, student.getPassword());
+        values.put(COL_STUDENT_FACULTY_ID, student.getFacultyId());
+
+        long id = db.insert(TABLE_STUDENTS, null, values);
+        db.close();
+        return id;
+    }
 
