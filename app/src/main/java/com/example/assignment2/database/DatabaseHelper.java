@@ -158,3 +158,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(id)});
         db.close();
     }
+    // ==================== COURSE CRUD ====================
+
+    public long addCourse(Course course) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_COURSE_CODE, course.getCourseCode());
+        values.put(COL_COURSE_NAME, course.getCourseName());
+        values.put(COL_COURSE_CREDITS, course.getCredits());
+        values.put(COL_COURSE_FACULTY_ID, course.getFacultyId());
+        values.put(COL_COURSE_DESC, course.getDescription());
+
+        long id = db.insert(TABLE_COURSES, null, values);
+        db.close();
+        return id;
+    }
