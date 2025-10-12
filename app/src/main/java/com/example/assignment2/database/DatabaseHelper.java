@@ -220,3 +220,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return rows;
     }
+    public void deleteCourse(long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_COURSES, COL_COURSE_ID + " = ?",
+                new String[]{String.valueOf(id)});
+        db.close();
+    }
+
