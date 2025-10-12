@@ -96,3 +96,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FACULTIES);
         onCreate(db);
     }
+    // ==================== FACULTY CRUD ====================
+
+    public long addFaculty(Faculty faculty) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_FACULTY_NAME, faculty.getFacultyName());
+        values.put(COL_DEAN_NAME, faculty.getDeanName());
+        values.put(COL_FACULTY_DESC, faculty.getDescription());
+
+        long id = db.insert(TABLE_FACULTIES, null, values);
+        db.close();
+        return id;
+    }
