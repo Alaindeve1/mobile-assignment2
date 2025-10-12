@@ -43,3 +43,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL_COURSE_CREDITS = "credits";
     private static final String COL_COURSE_FACULTY_ID = "faculty_id";
     private static final String COL_COURSE_DESC = "description";
+    // CREATE TABLE QUERIES
+    private static final String CREATE_TABLE_FACULTIES =
+            "CREATE TABLE " + TABLE_FACULTIES + " (" +
+                    COL_FACULTY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_FACULTY_NAME + " TEXT NOT NULL, " +
+                    COL_DEAN_NAME + " TEXT, " +
+                    COL_FACULTY_DESC + " TEXT" +
+                    ")";
+
+    private static final String CREATE_TABLE_STUDENTS =
+            "CREATE TABLE " + TABLE_STUDENTS + " (" +
+                    COL_STUDENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_STUDENT_NUMBER + " TEXT UNIQUE NOT NULL, " +
+                    COL_STUDENT_NAME + " TEXT NOT NULL, " +
+                    COL_STUDENT_EMAIL + " TEXT, " +
+                    COL_STUDENT_PHONE + " TEXT, " +
+                    COL_STUDENT_GENDER + " TEXT, " +
+                    COL_STUDENT_PASSWORD + " TEXT, " +
+                    COL_STUDENT_FACULTY_ID + " INTEGER, " +
+                    "FOREIGN KEY(" + COL_STUDENT_FACULTY_ID + ") REFERENCES " +
+                    TABLE_FACULTIES + "(" + COL_FACULTY_ID + ")" +
+                    ")";
+
+    private static final String CREATE_TABLE_COURSES =
+            "CREATE TABLE " + TABLE_COURSES + " (" +
+                    COL_COURSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_COURSE_CODE + " TEXT UNIQUE NOT NULL, " +
+                    COL_COURSE_NAME + " TEXT NOT NULL, " +
+                    COL_COURSE_CREDITS + " INTEGER DEFAULT 3, " +
+                    COL_COURSE_FACULTY_ID + " INTEGER NOT NULL, " +
+                    COL_COURSE_DESC + " TEXT, " +
+                    "FOREIGN KEY(" + COL_COURSE_FACULTY_ID + ") REFERENCES " +
+                    TABLE_FACULTIES + "(" + COL_FACULTY_ID + ")" +
+                    ")";
+
