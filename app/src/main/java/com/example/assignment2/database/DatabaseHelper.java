@@ -243,4 +243,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return id;
     }
+    public List<Student> getAllStudents() {
+        List<Student> studentList = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_STUDENTS + " ORDER BY " + COL_STUDENT_NUMBER;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                studentList.add(cursorToStudent(cursor));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return studentList;
+    }
+
 
