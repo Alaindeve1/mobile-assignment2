@@ -89,6 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_COURSES);
         // NO DUMMY DATA - Users add their own through UI
     }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSES);
@@ -109,6 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return id;
     }
+
     public List<Faculty> getAllFaculties() {
         List<Faculty> facultyList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_FACULTIES + " ORDER BY " + COL_FACULTY_NAME;
@@ -140,6 +142,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return faculty;
     }
+
     public int updateFaculty(Faculty faculty) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -152,6 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return rows;
     }
+
     public void deleteFaculty(long id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_FACULTIES, COL_FACULTY_ID + " = ?",
@@ -173,6 +177,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return id;
     }
+
     public List<Course> getAllCourses() {
         List<Course> courseList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_COURSES + " ORDER BY " + COL_COURSE_CODE;
@@ -190,6 +195,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return courseList;
     }
+
     public List<Course> getCoursesByFaculty(long facultyId) {
         List<Course> courseList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -206,6 +212,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return courseList;
     }
+
     public int updateCourse(Course course) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -220,6 +227,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return rows;
     }
+
     public void deleteCourse(long id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_COURSES, COL_COURSE_ID + " = ?",
@@ -243,6 +251,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return id;
     }
+
     public List<Student> getAllStudents() {
         List<Student> studentList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_STUDENTS + " ORDER BY " + COL_STUDENT_NUMBER;
@@ -260,6 +269,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return studentList;
     }
+
     public List<Student> getStudentsByFaculty(long facultyId) {
         List<Student> studentList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -276,6 +286,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return studentList;
     }
+
     public Student getStudent(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_STUDENTS, null, COL_STUDENT_ID + " = ?",
@@ -288,7 +299,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         db.close();
         return student;
-    } public Student getStudentByStudentId(String studentId) {
+    }
+
+    public Student getStudentByStudentId(String studentId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_STUDENTS, null, COL_STUDENT_NUMBER + " = ?",
                 new String[]{studentId}, null, null, null);
@@ -301,5 +314,177 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return student;
     }
+
+    public int updateStudent(Student student) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_STUDENT_NUMBER, student.getStudentId());
+        values.put(COL_STUDENT_NAME, student.getName());
+        values.put(COL_STUDENT_EMAIL, student.getEmail());
+        values.put(COL_STUDENT_PHONE, student.getPhone());
+        values.put(COL_STUDENT_GENDER, student.getGender());
+        values.put(COL_STUDENT_PASSWORD, student.getPassword());
+        values.put(COL_STUDENT_FACULTY_ID, student.getFacultyId());
+
+        int rows = db.update(TABLE_STUDENTS, values, COL_STUDENT_ID + " = ?",
+                new String[]{String.valueOf(student.getId())});
+        db.close();
+        return rows;
+    }
+
+    public void deleteStudent(long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_STUDENTS, COL_STUDENT_ID + " = ?",
+                new String[]{String.valueOf(id)});
+        db.close();
+    }
+
+    public int getStudentCount() {
+        String countQuery = "SELECT COUNT(*) FROM " + TABLE_STUDENTS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return count;
+    }
+
+    public boolean validateLogin(String username, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_STUDENTS, new String[]{COL_STUDENT_ID},
+                COL_STUDENT_NUMBER + " = ? AND " + COL_STUDENT_PASSWORD + " = ?",
+                new String[]{username, password}, null, null, null);
+
+        boolean isValid = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return isValid;
+    }
+
+    // ==================== JOIN QUERIES ====================
+
+    public Map<String, String> getStudentWithFaculty(String studentId) {
+        Map<String, String> result = new HashMap<>();
+
+        String query = "SELECT s.*, f." + COL_FACULTY_NAME + " " +
+                "FROM " + TABLE_STUDENTS + " s " +
+                "INNER JOIN " + TABLE_FACULTIES + " f " +
+                "ON s." + COL_STUDENT_FACULTY_ID + " = f." + COL_FACULTY_ID + " " +
+                "WHERE s." + COL_STUDENT_NUMBER + " = ?";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, new String[]{studentId});
+
+        if (cursor.moveToFirst()) {
+            result.put("student_id", cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_NUMBER)));
+            result.put("name", cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_NAME)));
+            result.put("email", cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_EMAIL)));
+            result.put("phone", cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_PHONE)));
+            result.put("gender", cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_GENDER)));
+            result.put("faculty_name", cursor.getString(cursor.getColumnIndexOrThrow(COL_FACULTY_NAME)));
+        }
+
+        cursor.close();
+        db.close();
+        return result;
+    }
+
+    public List<Map<String, String>> getFacultiesWithStudentCount() {
+        List<Map<String, String>> resultList = new ArrayList<>();
+
+        String query = "SELECT f." + COL_FACULTY_ID + ", f." + COL_FACULTY_NAME + ", " +
+                "f." + COL_DEAN_NAME + ", COUNT(s." + COL_STUDENT_ID + ") as student_count " +
+                "FROM " + TABLE_FACULTIES + " f " +
+                "LEFT JOIN " + TABLE_STUDENTS + " s " +
+                "ON f." + COL_FACULTY_ID + " = s." + COL_STUDENT_FACULTY_ID + " " +
+                "GROUP BY f." + COL_FACULTY_ID + " " +
+                "ORDER BY f." + COL_FACULTY_NAME;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Map<String, String> map = new HashMap<>();
+                map.put("faculty_id", cursor.getString(0));
+                map.put("faculty_name", cursor.getString(1));
+                map.put("dean_name", cursor.getString(2));
+                map.put("student_count", cursor.getString(3));
+                resultList.add(map);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return resultList;
+    }
+
+    public List<Map<String, String>> getCoursesWithFacultyName() {
+        List<Map<String, String>> resultList = new ArrayList<>();
+
+        String query = "SELECT c.*, f." + COL_FACULTY_NAME + " " +
+                "FROM " + TABLE_COURSES + " c " +
+                "INNER JOIN " + TABLE_FACULTIES + " f " +
+                "ON c." + COL_COURSE_FACULTY_ID + " = f." + COL_FACULTY_ID + " " +
+                "ORDER BY c." + COL_COURSE_CODE;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Map<String, String> map = new HashMap<>();
+                map.put("course_code", cursor.getString(cursor.getColumnIndexOrThrow(COL_COURSE_CODE)));
+                map.put("course_name", cursor.getString(cursor.getColumnIndexOrThrow(COL_COURSE_NAME)));
+                map.put("credits", cursor.getString(cursor.getColumnIndexOrThrow(COL_COURSE_CREDITS)));
+                map.put("faculty_name", cursor.getString(cursor.getColumnIndexOrThrow(COL_FACULTY_NAME)));
+                resultList.add(map);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return resultList;
+    }
+
+    // ==================== HELPER METHODS ====================
+
+    private Faculty cursorToFaculty(Cursor cursor) {
+        return new Faculty(
+                cursor.getLong(cursor.getColumnIndexOrThrow(COL_FACULTY_ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_FACULTY_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_DEAN_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_FACULTY_DESC))
+        );
+    }
+
+    private Course cursorToCourse(Cursor cursor) {
+        return new Course(
+                cursor.getLong(cursor.getColumnIndexOrThrow(COL_COURSE_ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_COURSE_CODE)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_COURSE_NAME)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(COL_COURSE_CREDITS)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(COL_COURSE_FACULTY_ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_COURSE_DESC))
+        );
+    }
+
+    private Student cursorToStudent(Cursor cursor) {
+        return new Student(
+                cursor.getLong(cursor.getColumnIndexOrThrow(COL_STUDENT_ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_NUMBER)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_EMAIL)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_PHONE)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_GENDER)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_PASSWORD)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(COL_STUDENT_FACULTY_ID))
+        );
+    }
+}
 
 
