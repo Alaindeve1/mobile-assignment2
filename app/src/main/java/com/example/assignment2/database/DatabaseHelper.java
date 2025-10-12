@@ -140,3 +140,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return faculty;
     }
+    public int updateFaculty(Faculty faculty) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_FACULTY_NAME, faculty.getFacultyName());
+        values.put(COL_DEAN_NAME, faculty.getDeanName());
+        values.put(COL_FACULTY_DESC, faculty.getDescription());
+
+        int rows = db.update(TABLE_FACULTIES, values, COL_FACULTY_ID + " = ?",
+                new String[]{String.valueOf(faculty.getFacultyId())});
+        db.close();
+        return rows;
+    }
