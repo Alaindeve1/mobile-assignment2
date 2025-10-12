@@ -109,3 +109,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return id;
     }
+    public List<Faculty> getAllFaculties() {
+        List<Faculty> facultyList = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_FACULTIES + " ORDER BY " + COL_FACULTY_NAME;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                facultyList.add(cursorToFaculty(cursor));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return facultyList;
+    }
+
+    public Faculty getFaculty(long id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_FACULTIES, null, COL_FACULTY_ID + " = ?",
+                new String[]{String.valueOf(id)}, null, null, null);
+
+        Faculty faculty = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            faculty = cursorToFaculty(cursor);
+            cursor.close();
+        }
+        db.close();
+        return faculty;
+    }
