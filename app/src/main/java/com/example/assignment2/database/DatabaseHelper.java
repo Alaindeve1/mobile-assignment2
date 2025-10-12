@@ -206,3 +206,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return courseList;
     }
+    public int updateCourse(Course course) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_COURSE_CODE, course.getCourseCode());
+        values.put(COL_COURSE_NAME, course.getCourseName());
+        values.put(COL_COURSE_CREDITS, course.getCredits());
+        values.put(COL_COURSE_FACULTY_ID, course.getFacultyId());
+        values.put(COL_COURSE_DESC, course.getDescription());
+
+        int rows = db.update(TABLE_COURSES, values, COL_COURSE_ID + " = ?",
+                new String[]{String.valueOf(course.getCourseId())});
+        db.close();
+        return rows;
+    }
