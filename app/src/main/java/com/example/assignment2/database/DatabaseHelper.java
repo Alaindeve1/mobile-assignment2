@@ -190,3 +190,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return courseList;
     }
+    public List<Course> getCoursesByFaculty(long facultyId) {
+        List<Course> courseList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_COURSES, null, COL_COURSE_FACULTY_ID + " = ?",
+                new String[]{String.valueOf(facultyId)}, null, null, COL_COURSE_NAME);
+
+        if (cursor.moveToFirst()) {
+            do {
+                courseList.add(cursorToCourse(cursor));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return courseList;
+    }
