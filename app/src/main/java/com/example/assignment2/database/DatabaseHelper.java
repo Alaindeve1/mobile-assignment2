@@ -288,6 +288,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         db.close();
         return student;
+    } public Student getStudentByStudentId(String studentId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_STUDENTS, null, COL_STUDENT_NUMBER + " = ?",
+                new String[]{studentId}, null, null, null);
+
+        Student student = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            student = cursorToStudent(cursor);
+            cursor.close();
+        }
+        db.close();
+        return student;
     }
 
 
