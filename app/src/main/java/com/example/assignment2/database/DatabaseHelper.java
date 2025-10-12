@@ -173,3 +173,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return id;
     }
+    public List<Course> getAllCourses() {
+        List<Course> courseList = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_COURSES + " ORDER BY " + COL_COURSE_CODE;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                courseList.add(cursorToCourse(cursor));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return courseList;
+    }
