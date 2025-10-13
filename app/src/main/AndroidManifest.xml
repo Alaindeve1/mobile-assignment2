@@ -52,25 +52,30 @@
             android:theme="@style/Theme.Assignment2" />
         <!-- Faculty Management -->
         <activity
-            android:name=".activities.FacultyListActivity"
-            android:exported="false" />
+            android:name=".FacultyListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Assignment2" />
 
         <activity
-            android:name=".activities.FacultyDetailsActivity"
-            android:exported="false" />
+            android:name=".FacultyDetailsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Assignment2"/>
 
         <activity
-            android:name=".activities.AddEditFacultyActivity"
-            android:exported="false" />
+            android:name=".AddEditFacultyActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Assignment2"/>
 
         <!-- Course Management -->
         <activity
-            android:name=".activities.CourseListActivity"
-            android:exported="false" />
+            android:name=".CourseListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Assignment2"/>
 
         <activity
-            android:name=".activities.AddEditCourseActivity"
-            android:exported="false" />
+            android:name=".AddEditCourseActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Assignment2"/>
 
     </application>
 
