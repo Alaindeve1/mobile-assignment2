@@ -32,4 +32,12 @@
                     android:textStyle="bold"
                     android:textColor="#333333"
                     android:layout_marginBottom="8dp"/>
+                <TextView
+                    android:id="@+id/tvDeanName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dean: Dr. John Doe"
+                    android:textSize="16sp"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="8dp"/>
 
