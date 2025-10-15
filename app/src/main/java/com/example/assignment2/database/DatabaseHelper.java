@@ -87,7 +87,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_FACULTIES);
         db.execSQL(CREATE_TABLE_STUDENTS);
         db.execSQL(CREATE_TABLE_COURSES);
-        // NO DUMMY DATA - Users add their own through UI
+
+        // Add default faculty so students can be created
+        ContentValues defaultFaculty = new ContentValues();
+        defaultFaculty.put(COL_FACULTY_NAME, "General Studies");
+        defaultFaculty.put(COL_DEAN_NAME, "Academic Office");
+        defaultFaculty.put(COL_FACULTY_DESC, "Default faculty for new students");
+        db.insert(TABLE_FACULTIES, null, defaultFaculty);
     }
 
     @Override
@@ -194,6 +200,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return courseList;
+    }
+    public Course getCourseById(long id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_COURSES, null, COL_COURSE_ID + " = ?",
+                new String[]{String.valueOf(id)}, null, null, null);
+
+        Course course = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            course = cursorToCourse(cursor);
+            cursor.close();
+        }
+        db.close();
+        return course;
     }
 
     public List<Course> getCoursesByFaculty(long facultyId) {
