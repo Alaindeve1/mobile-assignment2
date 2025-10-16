@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
-    android:padding="16dp">
+    tools:context=".UserDetailsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <!-- Header Card -->
         <androidx.cardview.widget.CardView
@@ -23,38 +25,43 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:background="#4CAF50">
+                android:background="#2196F3">
 
                 <TextView
                     android:id="@+id/tvWelcome"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Welcome!"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="8dp"/>
+                    android:textColor="@android:color/white"
+                    android:gravity="center"/>
 
                 <TextView
                     android:id="@+id/tvUserInfo"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="User Information"
-                    android:textSize="16sp"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="4dp"/>
+                    android:textSize="14sp"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp"/>
 
                 <TextView
                     android:id="@+id/tvSource"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Source: Unknown"
                     android:textSize="12sp"
-                    android:textColor="#E8F5E9"/>
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp"/>
+
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
 
-        <!-- User Details Card -->
+        <!-- Details Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,85 +72,94 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Personal Information"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="#333333"
-                    android:layout_marginBottom="16dp"/>
+                android:padding="16dp"
+                android:background="@android:color/white">
 
                 <TextView
                     android:id="@+id/tvStudentId"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🆔 Student ID: S001"
+                    android:text="Student ID: "
                     android:textSize="16sp"
-                    android:textColor="#555555"
-                    android:layout_marginBottom="12dp"
+                    android:textColor="#333333"
+                    android:padding="12dp"
+                    android:background="#F5F5F5"
+                    android:layout_marginBottom="8dp"
                     android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tvFullName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="👤 Full Name: John Doe"
+                    android:text="Full Name: "
                     android:textSize="16sp"
-                    android:textColor="#555555"
-                    android:layout_marginBottom="12dp"
+                    android:textColor="#333333"
+                    android:padding="12dp"
+                    android:background="#F5F5F5"
+                    android:layout_marginBottom="8dp"
                     android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tvEmail"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📧 Email: john@example.com"
+                    android:text="Email: "
                     android:textSize="16sp"
-                    android:textColor="#555555"
-                    android:layout_marginBottom="12dp"/>
+                    android:textColor="#333333"
+                    android:padding="12dp"
+                    android:background="#F5F5F5"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tvPhone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📞 Phone: +250788123456"
+                    android:text="Phone: "
                     android:textSize="16sp"
-                    android:textColor="#555555"
-                    android:layout_marginBottom="12dp"
+                    android:textColor="#333333"
+                    android:padding="12dp"
+                    android:background="#F5F5F5"
+                    android:layout_marginBottom="8dp"
                     android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tvGender"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="⚥ Gender: Male"
+                    android:text="Gender: "
                     android:textSize="16sp"
-                    android:textColor="#555555"
-                    android:layout_marginBottom="12dp"
+                    android:textColor="#333333"
+                    android:padding="12dp"
+                    android:background="#F5F5F5"
+                    android:layout_marginBottom="8dp"
                     android:visibility="gone"/>
 
                 <TextView
-                    android:id="@+id/tvFaculty"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvFacultyName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🏛️ Faculty: Computer Science"
+                    android:text="Faculty: "
                     android:textSize="16sp"
-                    android:textColor="#555555"
-                    android:layout_marginBottom="12dp"
+                    android:textColor="#333333"
+                    android:padding="12dp"
+                    android:background="#F5F5F5"
+                    android:layout_marginBottom="8dp"
                     android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tvNewsletter"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📬 Newsletter: Subscribed"
+                    android:text="Newsletter: "
                     android:textSize="16sp"
-                    android:textColor="#555555"
+                    android:textColor="#333333"
+                    android:padding="12dp"
+                    android:background="#F5F5F5"
                     android:visibility="gone"/>
+
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
 
         <!-- Action Buttons -->
@@ -152,35 +168,58 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Edit Profile"
-            android:textSize="16sp"
-            android:backgroundTint="#2196F3"
-            android:textColor="#FFFFFF"
+            android:backgroundTint="#4CAF50"
+            android:textColor="@android:color/white"
             android:padding="16dp"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="12dp"
+            android:visibility="visible"/>
 
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete Student"
+            android:backgroundTint="#F44336"
+            android:textColor="@android:color/white"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone"/>
+
+        <!-- AUCA Link -->
+        <TextView
+            android:id="@+id/tvAucaLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Visit AUCA Website"
+            android:textSize="16sp"
+            android:textColor="#2196F3"
+            android:gravity="center"
+            android:padding="12dp"
+            android:background="@android:color/white"
+            android:layout_marginBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <!-- Logout Button -->
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Logout"
-            android:textSize="16sp"
-            android:backgroundTint="#F44336"
-            android:textColor="#FFFFFF"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:backgroundTint="#757575"
+            android:textColor="@android:color/white"
+            android:padding="16dp"/>
 
-        <!-- AUCA Link -->
+        <!-- Info Text -->
         <TextView
-            android:id="@+id/tvAucaLink"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🌐 Visit AUCA Website"
-            android:textSize="16sp"
-            android:textColor="#2196F3"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_gravity="center"/>
+            android:text="Tap email or phone to send message or call"
+            android:textSize="12sp"
+            android:textColor="#757575"
+            android:gravity="center"
+            android:padding="16dp"/>
 
     </LinearLayout>
+
 </ScrollView>
