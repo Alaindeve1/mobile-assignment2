@@ -1,105 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".SignUpActivity">
+    android:background="#F5F5F5"
+    android:padding="16dp">
 
     <LinearLayout
-        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center_horizontal">
+        android:orientation="vertical">
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="serif"
-            android:text="Student Management System"
-            android:textColor="#262626"
-            android:textSize="36sp"
-            android:textStyle="bold|italic" />
-
-       
+        <!-- Title -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign up to see photos and videos from your friends."
-            android:textSize="14sp"
-            android:textColor="#8E8E8E"
-            android:gravity="center"
-            android:layout_marginBottom="32dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp" />
+            android:text="Create Account"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="8dp"
+            android:layout_gravity="center"/>
 
-        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Student Registration"
+            android:textSize="16sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="24dp"
+            android:layout_gravity="center"/>
+
+        <!-- Student ID (NEW) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Student ID *"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="4dp"/>
+
+        <EditText
+            android:id="@+id/etStudentId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g., S001"
+            android:inputType="text"
+            android:padding="12dp"
+            android:background="@android:drawable/edit_text"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Full Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Full Name *"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="4dp"/>
+
         <EditText
             android:id="@+id/etFullName"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Full name"
+            android:layout_height="wrap_content"
+            android:hint="Enter your full name"
             android:inputType="textPersonName"
-            android:background="@drawable/edit_text_background"
             android:padding="12dp"
-            android:layout_marginBottom="12dp"
-            android:textSize="14sp"
-            android:textColorHint="#8E8E8E" />
+            android:background="@android:drawable/edit_text"
+            android:layout_marginBottom="16dp"/>
 
-        
+        <!-- Email -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email *"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="4dp"/>
+
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Email"
+            android:layout_height="wrap_content"
+            android:hint="student@auca.ac.rw"
             android:inputType="textEmailAddress"
-            android:background="@drawable/edit_text_background"
             android:padding="12dp"
-            android:layout_marginBottom="12dp"
-            android:textSize="14sp"
-            android:textColorHint="#8E8E8E" />
+            android:background="@android:drawable/edit_text"
+            android:layout_marginBottom="16dp"/>
 
-        
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:background="@drawable/edit_text_background"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp"
-            android:textSize="14sp"
-            android:textColorHint="#8E8E8E" />
-
-        
-        <EditText
-            android:id="@+id/etConfirmPassword"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Confirm Password"
-            android:inputType="textPassword"
-            android:background="@drawable/edit_text_background"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"
-            android:textSize="14sp"
-            android:textColorHint="#8E8E8E" />
-
-        
+        <!-- Phone (NEW) -->
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone Number *"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="4dp"/>
+
+        <EditText
+            android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Gender:"
+            android:hint="+250788123456"
+            android:inputType="phone"
+            android:padding="12dp"
+            android:background="@android:drawable/edit_text"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Gender -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gender *"
             android:textSize="14sp"
-            android:textColor="#262626"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp"/>
 
         <RadioGroup
             android:id="@+id/rgGender"
@@ -110,86 +125,128 @@
 
             <RadioButton
                 android:id="@+id/rbMale"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Male"
-                android:textSize="14sp"
-                android:layout_marginRight="24dp"
-                android:buttonTint="#1877F2" />
+                android:layout_weight="1"
+                android:text="Male"/>
 
             <RadioButton
                 android:id="@+id/rbFemale"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Female"
-                android:textSize="14sp"
-                android:buttonTint="#1877F2" />
-
+                android:layout_weight="1"
+                android:text="Female"/>
         </RadioGroup>
 
-        
+        <!-- Faculty Spinner (NEW) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Faculty *"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerFaculty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:background="@android:drawable/spinner_background"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Password -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password *"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="4dp"/>
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="At least 6 characters"
+            android:inputType="textPassword"
+            android:padding="12dp"
+            android:background="@android:drawable/edit_text"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Confirm Password -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm Password *"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="4dp"/>
+
+        <EditText
+            android:id="@+id/etConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Re-enter password"
+            android:inputType="textPassword"
+            android:padding="12dp"
+            android:background="@android:drawable/edit_text"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Checkboxes -->
         <CheckBox
             android:id="@+id/cbTerms"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I agree to the Terms of Service and Privacy Policy"
-            android:textSize="12sp"
-            android:textColor="#8E8E8E"
-            android:layout_marginBottom="8dp"
-            android:buttonTint="#1877F2" />
+            android:text="I agree to Terms and Conditions *"
+            android:textSize="14sp"
+            android:layout_marginBottom="8dp"/>
 
-        
         <CheckBox
             android:id="@+id/cbNewsletter"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Subscribe to newsletter for updates"
-            android:textSize="12sp"
-            android:textColor="#8E8E8E"
-            android:layout_marginBottom="24dp"
-            android:buttonTint="#1877F2" />
+            android:text="Subscribe to newsletter"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp"/>
 
-        
+        <!-- Sign Up Button -->
         <Button
             android:id="@+id/btnSignUp"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:text="Sign Up"
+            android:textSize="16sp"
+            android:padding="16dp"
+            android:backgroundTint="#4CAF50"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:background="@drawable/login_button_background"
-            android:layout_marginBottom="32dp"
-            android:elevation="2dp" />
+            android:layout_marginBottom="16dp"/>
 
-       
+        <!-- Login Link -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="32dp">
+            android:layout_gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Have an account? "
-                android:textColor="#8E8E8E"
-                android:textSize="12sp" />
+                android:text="Already have an account? "
+                android:textSize="14sp"
+                android:textColor="#666666"/>
 
             <TextView
                 android:id="@+id/tvLogin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Log in"
-                android:textColor="#1877F2"
-                android:textSize="12sp"
+                android:text="Login"
+                android:textSize="14sp"
+                android:textColor="#2196F3"
                 android:textStyle="bold"
                 android:clickable="true"
-                android:focusable="true" />
-
+                android:focusable="true"/>
         </LinearLayout>
 
     </LinearLayout>
-
 </ScrollView>
