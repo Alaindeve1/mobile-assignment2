@@ -81,15 +81,15 @@ public class CSVExporter {
     }
 
     /**
-     * Export Students table to CSV
+     * Export Students table to CSV with creator information
      */
     private boolean exportStudents(File exportDir, String timestamp) {
         try {
             File file = new File(exportDir, "students_" + timestamp + ".csv");
             FileWriter writer = new FileWriter(file);
 
-            // Write header
-            writer.append("Student ID,Name,Email,Phone,Gender,Faculty ID\n");
+            // UPDATED HEADER - added Created By
+            writer.append("Student ID,Name,Email,Phone,Gender,Faculty ID,Created By Student ID,Created By Student Name\n");
 
             // Write data
             List<Student> students = dbHelper.getAllStudents();
@@ -99,7 +99,16 @@ public class CSVExporter {
                 writer.append(escapeCsv(student.getEmail())).append(",");
                 writer.append(escapeCsv(student.getPhone())).append(",");
                 writer.append(escapeCsv(student.getGender())).append(",");
-                writer.append(String.valueOf(student.getFacultyId())).append("\n");
+                writer.append(String.valueOf(student.getFacultyId())).append(",");
+
+                // Get creator information
+                Student creator = dbHelper.getStudent(student.getCreatedBy());
+                if (creator != null) {
+                    writer.append(escapeCsv(creator.getStudentId())).append(",");
+                    writer.append(escapeCsv(creator.getName())).append("\n");
+                } else {
+                    writer.append("Unknown,").append("Unknown\n");
+                }
             }
 
             writer.flush();
@@ -113,15 +122,15 @@ public class CSVExporter {
     }
 
     /**
-     * Export Faculties table to CSV
+     * Export Faculties table to CSV with creator information
      */
     private boolean exportFaculties(File exportDir, String timestamp) {
         try {
             File file = new File(exportDir, "faculties_" + timestamp + ".csv");
             FileWriter writer = new FileWriter(file);
 
-            // Write header
-            writer.append("Faculty ID,Faculty Name,Dean Name,Description\n");
+            // UPDATED HEADER - added Created By
+            writer.append("Faculty ID,Faculty Name,Dean Name,Description,Created By Student ID,Created By Student Name\n");
 
             // Write data
             List<Faculty> faculties = dbHelper.getAllFaculties();
@@ -129,7 +138,16 @@ public class CSVExporter {
                 writer.append(String.valueOf(faculty.getFacultyId())).append(",");
                 writer.append(escapeCsv(faculty.getFacultyName())).append(",");
                 writer.append(escapeCsv(faculty.getDeanName())).append(",");
-                writer.append(escapeCsv(faculty.getDescription())).append("\n");
+                writer.append(escapeCsv(faculty.getDescription())).append(",");
+
+                // Get creator information
+                Student creator = dbHelper.getStudent(faculty.getCreatedBy());
+                if (creator != null) {
+                    writer.append(escapeCsv(creator.getStudentId())).append(",");
+                    writer.append(escapeCsv(creator.getName())).append("\n");
+                } else {
+                    writer.append("Unknown,").append("Unknown\n");
+                }
             }
 
             writer.flush();
@@ -143,15 +161,15 @@ public class CSVExporter {
     }
 
     /**
-     * Export Courses table to CSV
+     * Export Courses table to CSV with creator information
      */
     private boolean exportCourses(File exportDir, String timestamp) {
         try {
             File file = new File(exportDir, "courses_" + timestamp + ".csv");
             FileWriter writer = new FileWriter(file);
 
-            // Write header
-            writer.append("Course ID,Course Code,Course Name,Credits,Faculty ID,Description\n");
+            // UPDATED HEADER - added Created By
+            writer.append("Course ID,Course Code,Course Name,Credits,Faculty ID,Description,Created By Student ID,Created By Student Name\n");
 
             // Write data
             List<Course> courses = dbHelper.getAllCourses();
@@ -161,7 +179,16 @@ public class CSVExporter {
                 writer.append(escapeCsv(course.getCourseName())).append(",");
                 writer.append(String.valueOf(course.getCredits())).append(",");
                 writer.append(String.valueOf(course.getFacultyId())).append(",");
-                writer.append(escapeCsv(course.getDescription())).append("\n");
+                writer.append(escapeCsv(course.getDescription())).append(",");
+
+                // Get creator information
+                Student creator = dbHelper.getStudent(course.getCreatedBy());
+                if (creator != null) {
+                    writer.append(escapeCsv(creator.getStudentId())).append(",");
+                    writer.append(escapeCsv(creator.getName())).append("\n");
+                } else {
+                    writer.append("Unknown,").append("Unknown\n");
+                }
             }
 
             writer.flush();
