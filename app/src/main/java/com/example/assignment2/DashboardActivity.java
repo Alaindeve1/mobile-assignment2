@@ -86,6 +86,15 @@ public class DashboardActivity extends AppCompatActivity {
         String currentDateTime = sdf.format(new Date());
         tvDateTime.setText(currentDateTime);
     }
+    private long getCurrentStudentId() {
+        if (studentId != null && !studentId.isEmpty()) {
+            Student currentStudent = dbHelper.getStudentByStudentId(studentId);
+            if (currentStudent != null) {
+                return currentStudent.getId();
+            }
+        }
+        return 1; // Fallback to default ID
+    }
 
     private void updateQuickStats() {
         int studentCount = dbHelper.getStudentCount();
