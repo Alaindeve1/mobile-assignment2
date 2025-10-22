@@ -14,12 +14,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.assignment2.database.DatabaseHelper;
+import com.example.assignment2.models.Student;
+
 public class LoginActivity extends AppCompatActivity {
 
-    // Declare UI components
     private EditText etUsername, etPassword;
     private Button btnLogin;
-    private TextView tvSignUp, tvForgotPassword, tvStudentList;
+    private TextView tvSignUp, tvForgotPassword;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,32 +30,54 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        // Handle system bars padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Initialize UI components
-        initializeViews();
+        dbHelper = new DatabaseHelper(this);
 
-        // Set up click listeners
+        // Create a default student if database is empty
+        createDefaultStudentIfNeeded();
+
+        initializeViews();
         setupClickListeners();
     }
 
+    private void createDefaultStudentIfNeeded() {
+        int studentCount = dbHelper.getStudentCount();
+        if (studentCount == 0) {
+            // Create a default admin student using the correct constructor
+            Student defaultStudent = new Student(
+                    "ADMIN001",
+                    "Admin User",
+                    "admin@auca.ac.rw",
+                    "+250788888888",
+                    "Male",
+                    "admin123",
+                    1L,  // facultyId (General Studies)
+                    1L   // createdBy (self)
+            );
+
+            long id = dbHelper.addStudent(defaultStudent);
+            if (id != -1) {
+                Toast.makeText(this, "Default admin created: ADMIN001/admin123", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Failed to create default admin", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     private void initializeViews() {
-        // Find views by their IDs
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         tvSignUp = findViewById(R.id.tvSignUp);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
-        tvStudentList = findViewById(R.id.tvStudentList);
     }
 
     private void setupClickListeners() {
-        // Login button click listener
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +85,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Sign up text click listener (Login → Sign-Up navigation)
         tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,29 +92,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Forgot password click listener
         tvForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, "Forgot password clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Student List click listener
-        tvStudentList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateToStudentList();
+                Toast.makeText(LoginActivity.this, "Please contact admin to reset password", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void handleLogin() {
-        // Get text from input fields
         String username = etUsername.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        // Simple validation
         if (username.isEmpty()) {
             etUsername.setError("Username cannot be empty");
             etUsername.requestFocus();
@@ -103,46 +116,54 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Simple authentication
-        if (isValidCredentials(username, password)) {
-            // Show success toast
-            Toast.makeText(this, "Login successful! Welcome " + username, Toast.LENGTH_SHORT).show();
+        // DEBUG: Check total students
+        int totalStudents = dbHelper.getStudentCount();
+        Toast.makeText(this, "Total students in DB: " + totalStudents, Toast.LENGTH_SHORT).show();
 
-            // Navigate to Dashboard (UPDATED - now goes to Dashboard instead of UserDetails)
-            navigateToDashboard(username);
+        // Try to get student from database
+        Student student = dbHelper.getStudentByStudentId(username);
+
+        if (student == null) {
+            // Show available student IDs for debugging
+            StringBuilder availableIds = new StringBuilder("Available IDs: ");
+            java.util.List<Student> allStudents = dbHelper.getAllStudents();
+            for (Student s : allStudents) {
+                availableIds.append(s.getStudentId()).append(", ");
+            }
+            Toast.makeText(this, "User '" + username + "' not found. " + availableIds.toString(), Toast.LENGTH_LONG).show();
+            etUsername.requestFocus();
+            return;
+        }
+
+        // Check password
+        if (student.getPassword().equals(password)) {
+            Toast.makeText(this, "Welcome back, " + student.getName() + "!", Toast.LENGTH_SHORT).show();
+            navigateToDashboard(student.getStudentId(), student.getName());
         } else {
-            // Show error toast
-            Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Incorrect password. Please try again.", Toast.LENGTH_SHORT).show();
+            etPassword.setText("");
+            etPassword.requestFocus();
         }
     }
 
-    private boolean isValidCredentials(String username, String password) {
-        // Simple demo validation
-        return !username.isEmpty() && !password.isEmpty() && password.length() >= 3;
-    }
-
     private void navigateToSignUp() {
-        // Create intent to navigate to SignUpActivity
         Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
         startActivity(intent);
-
-        // Optional: add animation
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
-    // NEW: Navigate to Dashboard after successful login
-    private void navigateToDashboard(String username) {
+    private void navigateToDashboard(String studentId, String studentName) {
         Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-        intent.putExtra("username", username);
+        intent.putExtra("student_id", studentId);
+        intent.putExtra("username", studentName);
         startActivity(intent);
-        finish(); // Close login activity
+        finish();
     }
 
-    // Navigate to Student List
-    private void navigateToStudentList() {
-        Toast.makeText(this, "Opening Student List...", Toast.LENGTH_SHORT).show();
-
-        Intent intent = new Intent(LoginActivity.this, StudentListActivity.class);
-        startActivity(intent);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
     }
 }
