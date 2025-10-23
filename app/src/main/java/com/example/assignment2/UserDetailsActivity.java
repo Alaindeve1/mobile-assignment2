@@ -1,30 +1,37 @@
 package com.example.assignment2;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.assignment2.database.DatabaseHelper;
+import com.example.assignment2.models.Faculty;
+import com.example.assignment2.models.Student;
+
 public class UserDetailsActivity extends AppCompatActivity {
 
-    // Declare UI components
-    private TextView tvWelcome, tvUserInfo, tvSource;
-    private TextView tvStudentId, tvFullName, tvEmail, tvPhone, tvGender, tvNewsletter;
-    private Button btnLogout, btnEditProfile;
+    private TextView tvWelcome, tvUserInfo, tvSource, tvFacultyName;
+    private TextView tvStudentId, tvFullName, tvEmail, tvPhone, tvGender;
+    private Button btnLogout, btnEditProfile, btnDelete;
     private TextView tvAucaLink;
 
-    // Store student data
-    private String studentPhone;
-    private String studentEmail;
+    private DatabaseHelper dbHelper;
+    private Student currentStudent;
+    private boolean isMyProfile = false;
+    private long studentDbId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,25 +39,20 @@ public class UserDetailsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_user_details);
 
-        // Handle system bars padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Initialize UI components
+        dbHelper = new DatabaseHelper(this);
+
         initializeViews();
-
-        // Display user information
         displayUserInfo();
-
-        // Set up click listeners
         setupClickListeners();
     }
 
     private void initializeViews() {
-        // Find views by their IDs
         tvWelcome = findViewById(R.id.tvWelcome);
         tvUserInfo = findViewById(R.id.tvUserInfo);
         tvSource = findViewById(R.id.tvSource);
@@ -59,111 +61,131 @@ public class UserDetailsActivity extends AppCompatActivity {
         tvEmail = findViewById(R.id.tvEmail);
         tvPhone = findViewById(R.id.tvPhone);
         tvGender = findViewById(R.id.tvGender);
-        tvNewsletter = findViewById(R.id.tvNewsletter);
+        tvFacultyName = findViewById(R.id.tvFacultyName);
         btnLogout = findViewById(R.id.btnLogout);
         btnEditProfile = findViewById(R.id.btnEditProfile);
+        btnDelete = findViewById(R.id.btnDelete);
         tvAucaLink = findViewById(R.id.tvAucaLink);
     }
 
     private void displayUserInfo() {
-        // Get data passed from previous activity
         Intent intent = getIntent();
         String source = intent.getStringExtra("source");
 
-        if ("login".equals(source)) {
-            // Data from LoginActivity
-            String username = intent.getStringExtra("username");
+        if ("myprofile".equals(source)) {
+            // My Profile - data from Dashboard
+            isMyProfile = true;
+            studentDbId = intent.getLongExtra("student_db_id", -1);
 
-            tvWelcome.setText("Welcome back!");
-            tvUserInfo.setText("Logged in as: " + username);
-            tvSource.setText("Source: Login");
+            loadStudentFromDatabase(studentDbId);
 
-            // Hide fields that are not available from login
-            tvStudentId.setVisibility(View.GONE);
-            tvFullName.setVisibility(View.GONE);
-            tvEmail.setText("📧 Email: " + username + "@example.com");
-            tvPhone.setVisibility(View.GONE);
-            tvGender.setVisibility(View.GONE);
-            tvNewsletter.setVisibility(View.GONE);
+            tvWelcome.setText("My Profile");
+            tvUserInfo.setText("Your account information");
+            tvSource.setText("Source: My Profile");
 
-            studentEmail = username + "@example.com";
+            btnEditProfile.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.GONE);
+
+        } else if ("studentlist".equals(source)) {
+            // Student Details from StudentListActivity
+            isMyProfile = false;
+
+            String studentId = intent.getStringExtra("studentId");
+            currentStudent = dbHelper.getStudentByStudentId(studentId);
+
+            if (currentStudent != null) {
+                studentDbId = currentStudent.getId();
+                displayStudentData();
+
+                tvWelcome.setText("Student Details");
+                tvUserInfo.setText("View and manage student information");
+                tvSource.setText("Source: Student List");
+
+                btnEditProfile.setVisibility(View.VISIBLE);
+                btnEditProfile.setText("Edit Student");
+                btnDelete.setVisibility(View.VISIBLE);
+
+                makeEmailClickable();
+                makePhoneClickable();
+            }
 
         } else if ("signup".equals(source)) {
-            // Data from SignUpActivity
+            // From SignUp - Display the data passed
+            String studentId = intent.getStringExtra("studentId");
             String fullName = intent.getStringExtra("fullName");
             String email = intent.getStringExtra("email");
             String gender = intent.getStringExtra("gender");
             boolean newsletter = intent.getBooleanExtra("newsletter", false);
 
-            tvWelcome.setText("Welcome to Instagram!");
+            tvWelcome.setText("Welcome!");
             tvUserInfo.setText("Account created successfully");
             tvSource.setText("Source: Sign Up");
 
-            // Show all available information
-            tvStudentId.setVisibility(View.GONE);
-            tvFullName.setText("Full Name: " + fullName);
-            tvEmail.setText("📧 Email: " + email);
-            tvPhone.setVisibility(View.GONE);
-            tvGender.setText("Gender: " + gender);
-            tvNewsletter.setText("Newsletter: " + (newsletter ? "Subscribed" : "Not subscribed"));
-
-            // Make all fields visible
-            tvFullName.setVisibility(View.VISIBLE);
-            tvGender.setVisibility(View.VISIBLE);
-            tvNewsletter.setVisibility(View.VISIBLE);
-
-            studentEmail = email;
-
-        } else if ("studentlist".equals(source)) {
-            // Data from StudentListActivity (NEW)
-            String studentId = intent.getStringExtra("studentId");
-            String fullName = intent.getStringExtra("fullName");
-            String email = intent.getStringExtra("email");
-            String phone = intent.getStringExtra("phone");
-            String gender = intent.getStringExtra("gender");
-
-            tvWelcome.setText("Student Details");
-            tvUserInfo.setText("View student information");
-            tvSource.setText("Source: Student List");
-
-            // Show all student information
+            // Display the data
             tvStudentId.setText("Student ID: " + studentId);
-            tvFullName.setText("Full Name: " + fullName);
-            tvEmail.setText("📧 Email: " + email + " (tap to send)");
-            tvPhone.setText("📞 Phone: " + phone + " (tap to call)");
-            tvGender.setText("Gender: " + gender);
-            tvNewsletter.setVisibility(View.GONE);
-
-            // Make all fields visible
             tvStudentId.setVisibility(View.VISIBLE);
+
+            tvFullName.setText("Full Name: " + fullName);
             tvFullName.setVisibility(View.VISIBLE);
-            tvPhone.setVisibility(View.VISIBLE);
+
+            tvEmail.setText("Email: " + email);
+            tvEmail.setVisibility(View.VISIBLE);
+
+            tvGender.setText("Gender: " + gender);
             tvGender.setVisibility(View.VISIBLE);
 
-            // Store for implicit intents
-            studentEmail = email;
-            studentPhone = phone;
+            // Hide fields not available from signup
+            tvPhone.setVisibility(View.GONE);
+            tvFacultyName.setVisibility(View.GONE);
 
-            // Make email and phone clickable
-            makeEmailClickable();
-            makePhoneClickable();
-
-        } else {
-            // Default case
-            tvWelcome.setText("Welcome!");
-            tvUserInfo.setText("User Details");
-            tvSource.setText("Source: Unknown");
+            // Hide action buttons for signup display
+            btnEditProfile.setVisibility(View.GONE);
+            btnDelete.setVisibility(View.GONE);
         }
+    }
+
+    private void loadStudentFromDatabase(long dbId) {
+        currentStudent = dbHelper.getStudent(dbId);
+
+        if (currentStudent != null) {
+            displayStudentData();
+        } else {
+            Toast.makeText(this, "Error loading student data", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
+
+    private void displayStudentData() {
+        tvStudentId.setText("Student ID: " + currentStudent.getStudentId());
+        tvFullName.setText("Full Name: " + currentStudent.getName());
+        tvEmail.setText("📧 Email: " + currentStudent.getEmail());
+        tvPhone.setText("📞 Phone: " + currentStudent.getPhone());
+        tvGender.setText("Gender: " + currentStudent.getGender());
+
+        // Get and display faculty name
+        Faculty faculty = dbHelper.getFaculty(currentStudent.getFacultyId());
+        if (faculty != null) {
+            tvFacultyName.setText("Faculty: " + faculty.getFacultyName());
+            tvFacultyName.setVisibility(View.VISIBLE);
+        } else {
+            tvFacultyName.setVisibility(View.GONE);
+        }
+
+        // Make all fields visible
+        tvStudentId.setVisibility(View.VISIBLE);
+        tvFullName.setVisibility(View.VISIBLE);
+        tvEmail.setVisibility(View.VISIBLE);
+        tvPhone.setVisibility(View.VISIBLE);
+        tvGender.setVisibility(View.VISIBLE);
     }
 
     private void makeEmailClickable() {
         tvEmail.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
         tvEmail.setClickable(true);
-        tvEmail.setFocusable(true);
         tvEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendEmail();
+                sendEmail(currentStudent.getEmail());
             }
         });
     }
@@ -171,17 +193,15 @@ public class UserDetailsActivity extends AppCompatActivity {
     private void makePhoneClickable() {
         tvPhone.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
         tvPhone.setClickable(true);
-        tvPhone.setFocusable(true);
         tvPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makePhoneCall();
+                makePhoneCall(currentStudent.getPhone());
             }
         });
     }
 
     private void setupClickListeners() {
-        // Logout button click listener
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,15 +209,20 @@ public class UserDetailsActivity extends AppCompatActivity {
             }
         });
 
-        // Edit Profile button click listener
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleEditProfile();
+                showEditDialog();
             }
         });
 
-        // AUCA website link click listener
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDeleteConfirmation();
+            }
+        });
+
         tvAucaLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,79 +231,133 @@ public class UserDetailsActivity extends AppCompatActivity {
         });
     }
 
-    // Implicit Intent: Send Email
-    private void sendEmail() {
-        if (studentEmail == null || studentEmail.isEmpty()) {
-            Toast.makeText(this, "No email address available", Toast.LENGTH_SHORT).show();
+    private void showEditDialog() {
+        if (currentStudent == null) {
+            Toast.makeText(this, "No student data to edit", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Student");
+
+        // Create custom dialog layout
+        final View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_student, null);
+        builder.setView(dialogView);
+
+        final EditText etName = dialogView.findViewById(R.id.etEditName);
+        final EditText etEmail = dialogView.findViewById(R.id.etEditEmail);
+        final EditText etPhone = dialogView.findViewById(R.id.etEditPhone);
+
+        // Pre-fill with current data
+        etName.setText(currentStudent.getName());
+        etEmail.setText(currentStudent.getEmail());
+        etPhone.setText(currentStudent.getPhone());
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newName = etName.getText().toString().trim();
+                String newEmail = etEmail.getText().toString().trim();
+                String newPhone = etPhone.getText().toString().trim();
+
+                if (newName.isEmpty() || newEmail.isEmpty() || newPhone.isEmpty()) {
+                    Toast.makeText(UserDetailsActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Update student data
+                currentStudent.setName(newName);
+                currentStudent.setEmail(newEmail);
+                currentStudent.setPhone(newPhone);
+
+                int rowsAffected = dbHelper.updateStudent(currentStudent);
+
+                if (rowsAffected > 0) {
+                    Toast.makeText(UserDetailsActivity.this, "Student updated successfully!", Toast.LENGTH_SHORT).show();
+                    displayStudentData(); // Refresh display
+                } else {
+                    Toast.makeText(UserDetailsActivity.this, "Failed to update student", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    private void showDeleteConfirmation() {
+        if (currentStudent == null) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Student");
+        builder.setMessage("Are you sure you want to delete " + currentStudent.getName() + "?\n\nThis action cannot be undone.");
+
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dbHelper.deleteStudent(currentStudent.getId());
+                Toast.makeText(UserDetailsActivity.this, "Student deleted successfully", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    private void sendEmail(String email) {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-        emailIntent.setData(Uri.parse("mailto:" + studentEmail));
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Hello from Instagram Clone");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi, I wanted to reach out to you...");
+        emailIntent.setData(Uri.parse("mailto:" + email));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Hello from Student Manager");
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send email using..."));
-            Toast.makeText(this, "Opening email app...", Toast.LENGTH_SHORT).show();
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "No email app found", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Implicit Intent: Make Phone Call
-    private void makePhoneCall() {
-        if (studentPhone == null || studentPhone.isEmpty()) {
-            Toast.makeText(this, "No phone number available", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Option 1: Open dialer with number pre-filled (doesn't require permission)
+    private void makePhoneCall(String phone) {
         Intent dialIntent = new Intent(Intent.ACTION_DIAL);
-        dialIntent.setData(Uri.parse("tel:" + studentPhone));
+        dialIntent.setData(Uri.parse("tel:" + phone));
 
         try {
             startActivity(dialIntent);
-            Toast.makeText(this, "Opening dialer...", Toast.LENGTH_SHORT).show();
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "No phone app found", Toast.LENGTH_SHORT).show();
         }
+    }
 
-        // Option 2: Direct call (requires CALL_PHONE permission)
-        // Intent callIntent = new Intent(Intent.ACTION_CALL);
-        // callIntent.setData(Uri.parse("tel:" + studentPhone));
-        // startActivity(callIntent);
+    private void openAucaWebsite() {
+        String url = "https://www.auca.ac.rw";
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+
+        try {
+            startActivity(browserIntent);
+        } catch (Exception e) {
+            Toast.makeText(this, "No browser found", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void handleLogout() {
-        Toast.makeText(this, "Logging out...", Toast.LENGTH_SHORT).show();
-
         Intent intent = new Intent(UserDetailsActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-
         startActivity(intent);
         finish();
     }
 
-    private void handleEditProfile() {
-        Toast.makeText(this, "Edit Profile feature coming soon!", Toast.LENGTH_SHORT).show();
-    }
-
-    private void openAucaWebsite() {
-        Toast.makeText(this, "Opening AUCA website...", Toast.LENGTH_SHORT).show();
-
-        String url = "https://www.auca.ac.rw";
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-
-        if (browserIntent.resolveActivity(getPackageManager()) != null) {
-            startActivity(browserIntent);
-        } else {
-            Toast.makeText(this, "No browser found to open the website", Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     @Override
-    public void onBackPressed() {
-        Toast.makeText(this, "Use logout button to exit", Toast.LENGTH_SHORT).show();
+    protected void onDestroy() {
+        super.onDestroy();
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
     }
 }
