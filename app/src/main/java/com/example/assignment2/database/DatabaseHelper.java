@@ -16,13 +16,15 @@ import java.util.Map;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "StudentDB.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3; // Increased version
+
     // FACULTIES TABLE
     private static final String TABLE_FACULTIES = "faculties";
     private static final String COL_FACULTY_ID = "faculty_id";
     private static final String COL_FACULTY_NAME = "faculty_name";
     private static final String COL_DEAN_NAME = "dean_name";
     private static final String COL_FACULTY_DESC = "description";
+    private static final String COL_CREATED_BY = "created_by";
 
     // STUDENTS TABLE
     private static final String TABLE_STUDENTS = "students";
@@ -43,13 +45,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL_COURSE_CREDITS = "credits";
     private static final String COL_COURSE_FACULTY_ID = "faculty_id";
     private static final String COL_COURSE_DESC = "description";
-    // CREATE TABLE QUERIES
+
+    // CREATE TABLE QUERIES WITH created_by
     private static final String CREATE_TABLE_FACULTIES =
             "CREATE TABLE " + TABLE_FACULTIES + " (" +
                     COL_FACULTY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COL_FACULTY_NAME + " TEXT NOT NULL, " +
                     COL_DEAN_NAME + " TEXT, " +
-                    COL_FACULTY_DESC + " TEXT" +
+                    COL_FACULTY_DESC + " TEXT, " +
+                    COL_CREATED_BY + " INTEGER NOT NULL, " +
+                    "FOREIGN KEY(" + COL_CREATED_BY + ") REFERENCES " +
+                    TABLE_STUDENTS + "(" + COL_STUDENT_ID + ")" +
                     ")";
 
     private static final String CREATE_TABLE_STUDENTS =
@@ -62,8 +68,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COL_STUDENT_GENDER + " TEXT, " +
                     COL_STUDENT_PASSWORD + " TEXT, " +
                     COL_STUDENT_FACULTY_ID + " INTEGER, " +
+                    COL_CREATED_BY + " INTEGER NOT NULL, " +
                     "FOREIGN KEY(" + COL_STUDENT_FACULTY_ID + ") REFERENCES " +
-                    TABLE_FACULTIES + "(" + COL_FACULTY_ID + ")" +
+                    TABLE_FACULTIES + "(" + COL_FACULTY_ID + "), " +
+                    "FOREIGN KEY(" + COL_CREATED_BY + ") REFERENCES " +
+                    TABLE_STUDENTS + "(" + COL_STUDENT_ID + ")" +
                     ")";
 
     private static final String CREATE_TABLE_COURSES =
@@ -74,8 +83,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COL_COURSE_CREDITS + " INTEGER DEFAULT 3, " +
                     COL_COURSE_FACULTY_ID + " INTEGER NOT NULL, " +
                     COL_COURSE_DESC + " TEXT, " +
+                    COL_CREATED_BY + " INTEGER NOT NULL, " +
                     "FOREIGN KEY(" + COL_COURSE_FACULTY_ID + ") REFERENCES " +
-                    TABLE_FACULTIES + "(" + COL_FACULTY_ID + ")" +
+                    TABLE_FACULTIES + "(" + COL_FACULTY_ID + "), " +
+                    "FOREIGN KEY(" + COL_CREATED_BY + ") REFERENCES " +
+                    TABLE_STUDENTS + "(" + COL_STUDENT_ID + ")" +
                     ")";
 
     public DatabaseHelper(Context context) {
@@ -88,11 +100,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_STUDENTS);
         db.execSQL(CREATE_TABLE_COURSES);
 
-        // Add default faculty so students can be created
+        // Add default faculty with created_by = 1 (will be updated when first student is created)
         ContentValues defaultFaculty = new ContentValues();
         defaultFaculty.put(COL_FACULTY_NAME, "General Studies");
         defaultFaculty.put(COL_DEAN_NAME, "Academic Office");
         defaultFaculty.put(COL_FACULTY_DESC, "Default faculty for new students");
+        defaultFaculty.put(COL_CREATED_BY, 1);
         db.insert(TABLE_FACULTIES, null, defaultFaculty);
     }
 
@@ -103,6 +116,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FACULTIES);
         onCreate(db);
     }
+
     // ==================== FACULTY CRUD ====================
 
     public long addFaculty(Faculty faculty) {
@@ -111,6 +125,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_FACULTY_NAME, faculty.getFacultyName());
         values.put(COL_DEAN_NAME, faculty.getDeanName());
         values.put(COL_FACULTY_DESC, faculty.getDescription());
+        values.put(COL_CREATED_BY, faculty.getCreatedBy());
 
         long id = db.insert(TABLE_FACULTIES, null, values);
         db.close();
@@ -168,6 +183,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(id)});
         db.close();
     }
+
     // ==================== COURSE CRUD ====================
 
     public long addCourse(Course course) {
@@ -178,6 +194,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_COURSE_CREDITS, course.getCredits());
         values.put(COL_COURSE_FACULTY_ID, course.getFacultyId());
         values.put(COL_COURSE_DESC, course.getDescription());
+        values.put(COL_CREATED_BY, course.getCreatedBy());
 
         long id = db.insert(TABLE_COURSES, null, values);
         db.close();
@@ -201,6 +218,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return courseList;
     }
+
     public Course getCourseById(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_COURSES, null, COL_COURSE_ID + " = ?",
@@ -253,6 +271,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(id)});
         db.close();
     }
+
     // ==================== STUDENT CRUD ====================
 
     public long addStudent(Student student) {
@@ -265,6 +284,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COL_STUDENT_GENDER, student.getGender());
         values.put(COL_STUDENT_PASSWORD, student.getPassword());
         values.put(COL_STUDENT_FACULTY_ID, student.getFacultyId());
+        values.put(COL_CREATED_BY, student.getCreatedBy());
 
         long id = db.insert(TABLE_STUDENTS, null, values);
         db.close();
@@ -384,15 +404,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return isValid;
     }
 
-    // ==================== JOIN QUERIES ====================
+    // ==================== JOIN QUERIES WITH CREATOR INFO ====================
 
     public Map<String, String> getStudentWithFaculty(String studentId) {
         Map<String, String> result = new HashMap<>();
 
-        String query = "SELECT s.*, f." + COL_FACULTY_NAME + " " +
+        String query = "SELECT s.*, f." + COL_FACULTY_NAME + ", creator." + COL_STUDENT_NAME + " as creator_name " +
                 "FROM " + TABLE_STUDENTS + " s " +
                 "INNER JOIN " + TABLE_FACULTIES + " f " +
                 "ON s." + COL_STUDENT_FACULTY_ID + " = f." + COL_FACULTY_ID + " " +
+                "LEFT JOIN " + TABLE_STUDENTS + " creator " +
+                "ON s." + COL_CREATED_BY + " = creator." + COL_STUDENT_ID + " " +
                 "WHERE s." + COL_STUDENT_NUMBER + " = ?";
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -405,6 +427,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             result.put("phone", cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_PHONE)));
             result.put("gender", cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_GENDER)));
             result.put("faculty_name", cursor.getString(cursor.getColumnIndexOrThrow(COL_FACULTY_NAME)));
+            result.put("creator_name", cursor.getString(cursor.getColumnIndexOrThrow("creator_name")));
         }
 
         cursor.close();
@@ -412,14 +435,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public List<Map<String, String>> getFacultiesWithStudentCount() {
+    public List<Map<String, String>> getFacultiesWithStudentCountAndCreator() {
         List<Map<String, String>> resultList = new ArrayList<>();
 
-        String query = "SELECT f." + COL_FACULTY_ID + ", f." + COL_FACULTY_NAME + ", " +
-                "f." + COL_DEAN_NAME + ", COUNT(s." + COL_STUDENT_ID + ") as student_count " +
+        String query = "SELECT f.*, COUNT(s." + COL_STUDENT_ID + ") as student_count, " +
+                "creator." + COL_STUDENT_NAME + " as creator_name " +
                 "FROM " + TABLE_FACULTIES + " f " +
                 "LEFT JOIN " + TABLE_STUDENTS + " s " +
                 "ON f." + COL_FACULTY_ID + " = s." + COL_STUDENT_FACULTY_ID + " " +
+                "LEFT JOIN " + TABLE_STUDENTS + " creator " +
+                "ON f." + COL_CREATED_BY + " = creator." + COL_STUDENT_ID + " " +
                 "GROUP BY f." + COL_FACULTY_ID + " " +
                 "ORDER BY f." + COL_FACULTY_NAME;
 
@@ -429,10 +454,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Map<String, String> map = new HashMap<>();
-                map.put("faculty_id", cursor.getString(0));
-                map.put("faculty_name", cursor.getString(1));
-                map.put("dean_name", cursor.getString(2));
-                map.put("student_count", cursor.getString(3));
+                map.put("faculty_id", cursor.getString(cursor.getColumnIndexOrThrow(COL_FACULTY_ID)));
+                map.put("faculty_name", cursor.getString(cursor.getColumnIndexOrThrow(COL_FACULTY_NAME)));
+                map.put("dean_name", cursor.getString(cursor.getColumnIndexOrThrow(COL_DEAN_NAME)));
+                map.put("student_count", cursor.getString(cursor.getColumnIndexOrThrow("student_count")));
+                map.put("creator_name", cursor.getString(cursor.getColumnIndexOrThrow("creator_name")));
                 resultList.add(map);
             } while (cursor.moveToNext());
         }
@@ -442,13 +468,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return resultList;
     }
 
-    public List<Map<String, String>> getCoursesWithFacultyName() {
+    public List<Map<String, String>> getCoursesWithFacultyNameAndCreator() {
         List<Map<String, String>> resultList = new ArrayList<>();
 
-        String query = "SELECT c.*, f." + COL_FACULTY_NAME + " " +
+        String query = "SELECT c.*, f." + COL_FACULTY_NAME + ", " +
+                "creator." + COL_STUDENT_NAME + " as creator_name " +
                 "FROM " + TABLE_COURSES + " c " +
                 "INNER JOIN " + TABLE_FACULTIES + " f " +
                 "ON c." + COL_COURSE_FACULTY_ID + " = f." + COL_FACULTY_ID + " " +
+                "LEFT JOIN " + TABLE_STUDENTS + " creator " +
+                "ON c." + COL_CREATED_BY + " = creator." + COL_STUDENT_ID + " " +
                 "ORDER BY c." + COL_COURSE_CODE;
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -461,6 +490,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 map.put("course_name", cursor.getString(cursor.getColumnIndexOrThrow(COL_COURSE_NAME)));
                 map.put("credits", cursor.getString(cursor.getColumnIndexOrThrow(COL_COURSE_CREDITS)));
                 map.put("faculty_name", cursor.getString(cursor.getColumnIndexOrThrow(COL_FACULTY_NAME)));
+                map.put("creator_name", cursor.getString(cursor.getColumnIndexOrThrow("creator_name")));
                 resultList.add(map);
             } while (cursor.moveToNext());
         }
@@ -477,7 +507,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.getLong(cursor.getColumnIndexOrThrow(COL_FACULTY_ID)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_FACULTY_NAME)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_DEAN_NAME)),
-                cursor.getString(cursor.getColumnIndexOrThrow(COL_FACULTY_DESC))
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_FACULTY_DESC)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(COL_CREATED_BY))
         );
     }
 
@@ -488,7 +519,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_COURSE_NAME)),
                 cursor.getInt(cursor.getColumnIndexOrThrow(COL_COURSE_CREDITS)),
                 cursor.getLong(cursor.getColumnIndexOrThrow(COL_COURSE_FACULTY_ID)),
-                cursor.getString(cursor.getColumnIndexOrThrow(COL_COURSE_DESC))
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_COURSE_DESC)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(COL_CREATED_BY))
         );
     }
 
@@ -501,9 +533,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_PHONE)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_GENDER)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_STUDENT_PASSWORD)),
-                cursor.getLong(cursor.getColumnIndexOrThrow(COL_STUDENT_FACULTY_ID))
+                cursor.getLong(cursor.getColumnIndexOrThrow(COL_STUDENT_FACULTY_ID)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(COL_CREATED_BY))
         );
     }
 }
-
-
