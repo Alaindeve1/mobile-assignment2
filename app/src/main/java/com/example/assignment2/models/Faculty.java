@@ -12,23 +12,30 @@ public class Faculty implements Serializable {
     private String facultyName;       // Name of faculty (e.g., "Computer Science")
     private String deanName;          // Dean's name
     private String description;       // Faculty description
+    private long createdBy;           // Student who created this faculty
 
     // Empty Constructor
     public Faculty() {
     }
 
     // Constructor without database ID (for creating new faculty)
-    public Faculty(String facultyName, String deanName, String description) {
+    public Faculty(String facultyName, String deanName, String description, long createdBy) {
         this.facultyName = facultyName;
         this.deanName = deanName;
         this.description = description;
-    }  // Constructor with database ID (for retrieving from database)
-    public Faculty(long facultyId, String facultyName, String deanName, String description) {
+        this.createdBy = createdBy;
+    }
+
+    // Constructor with database ID (for retrieving from database)
+    public Faculty(long facultyId, String facultyName, String deanName, String description, long createdBy) {
         this.facultyId = facultyId;
         this.facultyName = facultyName;
         this.deanName = deanName;
         this.description = description;
-    } // Getters
+        this.createdBy = createdBy;
+    }
+
+    // Getters
     public long getFacultyId() {
         return facultyId;
     }
@@ -43,6 +50,10 @@ public class Faculty implements Serializable {
 
     public String getDescription() {
         return description;
+    }
+
+    public long getCreatedBy() {
+        return createdBy;
     }
 
     // Setters
@@ -60,7 +71,13 @@ public class Faculty implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    } @Override
+    }
+
+    public void setCreatedBy(long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    @Override
     public String toString() {
         return facultyName; // Used for Spinner display
     }
