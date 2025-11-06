@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="#FFFFFF"
     android:padding="16dp"
-    tools:context=".StudentListActivity">
+    tools:context=".activities.StudentListActivity">
 
     <!-- Header Section -->
     <LinearLayout
