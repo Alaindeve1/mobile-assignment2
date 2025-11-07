@@ -9,7 +9,7 @@
     android:background="#FFFFFF"
     android:gravity="center"
     android:padding="24dp"
-    tools:context=".LoginActivity">
+    tools:context=".activities.LoginActivity">
 
     <!-- Instagram Logo -->
     <TextView
