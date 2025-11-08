@@ -1,4 +1,4 @@
-package com.example.assignment2;
+package com.example.assignment2.activities;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.assignment2.R;
 import com.example.assignment2.database.DatabaseHelper;
 import com.example.assignment2.models.Course;
 import com.example.assignment2.models.Faculty;
