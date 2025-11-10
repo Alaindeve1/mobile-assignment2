@@ -1,6 +1,8 @@
-package com.example.assignment2;
+package com.example.assignment2.activities;
 
 import android.content.DialogInterface;
+
+import com.example.assignment2.R;
 import com.example.assignment2.models.Student;
 import android.content.Intent;
 import android.os.Bundle;
