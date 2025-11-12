@@ -22,7 +22,7 @@
 
         <!-- LoginActivity - Main/Launcher Activity -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.Assignment2">
             <intent-filter>
@@ -33,51 +33,51 @@
 
         <!-- SignUpActivity -->
         <activity
-            android:name=".SignUpActivity"
+            android:name=".activities.SignUpActivity"
             android:exported="false"
             android:theme="@style/Theme.Assignment2" />
 
         <!-- UserDetailsActivity -->
         <activity
-            android:name=".UserDetailsActivity"
+            android:name=".activities.UserDetailsActivity"
             android:exported="false"
             android:theme="@style/Theme.Assignment2" />
 
         <!-- StudentListActivity -->
         <activity
-            android:name=".StudentListActivity"
+            android:name=".activities.StudentListActivity"
             android:exported="false"
             android:theme="@style/Theme.Assignment2" />
 
         <!-- DashboardActivity (NEW - Innovation Feature) -->
         <activity
-            android:name=".DashboardActivity"
+            android:name=".activities.DashboardActivity"
             android:exported="false"
             android:theme="@style/Theme.Assignment2" />
         <!-- Faculty Management -->
         <activity
-            android:name=".FacultyListActivity"
+            android:name=".activities.FacultyListActivity"
             android:exported="false"
             android:theme="@style/Theme.Assignment2" />
 
         <activity
-            android:name=".FacultyDetailsActivity"
+            android:name=".activities.FacultyDetailsActivity"
             android:exported="false"
             android:theme="@style/Theme.Assignment2"/>
 
         <activity
-            android:name=".AddEditFacultyActivity"
+            android:name=".activities.AddEditFacultyActivity"
             android:exported="false"
             android:theme="@style/Theme.Assignment2"/>
 
         <!-- Course Management -->
         <activity
-            android:name=".CourseListActivity"
+            android:name=".activities.CourseListActivity"
             android:exported="false"
             android:theme="@style/Theme.Assignment2"/>
 
         <activity
-            android:name=".AddEditCourseActivity"
+            android:name=".activities.AddEditCourseActivity"
             android:exported="false"
             android:theme="@style/Theme.Assignment2"/>
 
