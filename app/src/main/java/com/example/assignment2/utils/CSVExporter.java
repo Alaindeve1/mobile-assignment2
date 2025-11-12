@@ -1,4 +1,4 @@
-package com.example.assignment2;
+package com.example.assignment2.utils;
 
 import android.content.Context;
 import android.os.Environment;
